@@ -41,17 +41,18 @@ if __name__ == "__main__":
             ))
 
     if args.command == "convert":
+        if args.output and len(args.input) > 1:
+            raise SystemExit("can not set output name when multi input file.")
         for file in args.input:
             print(file)
             caj = CAJParser(file)
-            out = args.output
-            if out is None:
-                if file.endswith(".caj"):
-                    out = file.replace(".caj", ".pdf")
-                elif (len(file) > 4 and (file[-4] == '.' or file[-3] == '.') and not file.endswith(".pdf")):
-                    out = os.path.splitext(file)[0] + ".pdf"
-                else:
-                    out = file + ".pdf"
+            out = None
+            if file.endswith(".caj"):
+                out = file.replace(".caj", ".pdf")
+            elif (len(file) > 4 and (file[-4] == '.' or file[-3] == '.') and not file.endswith(".pdf")):
+                out = os.path.splitext(file)[0] + ".pdf"
+            else:
+                out = file + ".pdf"
             caj.convert(out)
 
     if args.command == "outlines":
